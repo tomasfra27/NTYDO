@@ -1,0 +1,218 @@
+Todos los ejemplos provienen de la página de prueba https://www.demoblaze.com/index.html
+
+// 51: 3 ejemplos del ID de un elemento web
+    driver.findElement(By.id("login2"));
+    driver.findElement(By.id("itemc"));
+    driver.findElement(By.id("prev2")); 
+    
+// 52: No he encontrado ningún elemento con atributo "name". La sintaxis es:
+    driver.findElement(By.name("example"));
+    
+// 53: 3 ejemplos de LinkText y 3 de PartialLinkText
+    driver.findElement(By.linkText("Log In"));
+    driver.findElement(By.linkText("Cart"));
+    driver.findElement(By.linkText("Contact"));
+    
+    driver.findElement(By.partialLinkText("Log"));
+    driver.findElement(By.partialLinkText("Car"));
+    driver.findElement(By.partialLinkText("Cont"));
+    
+// 54: 3 ejemplos de ClassName
+    driver.findElement(By.className("page-link"));
+    driver.findElement(By.className("list-group-item"));
+    driver.findElement(By.className("hrefch"));
+    
+// 55: 3 dejemplos de TagName
+    driver.findElement(By.tagName("a"));
+    driver.findElement(By.tagName("p"));
+    driver.findElement(By.tagName("li"));
+
+// 56: 3 ejemplos de IDs con CSS Selectors
+    button[id='prev2'] o button#prev2
+    a[id='itemc'] o a#itemc
+    a[id='hrefch'] o a#hrefch
+    
+// 57: 3 ejemplos de Class con CSS Selectors 
+    button[class=['page-link'] o button.page-link
+    a[class=['list-group-item'] o a.list-group-item
+    a[class=['hrefch'] o a.hrefch
+    
+// 58: 3 ejemplos de cada Wild Card (^, $, *)
+    usamos ^ para texto inicial
+        button[class^=['page-li'] 
+        a[class^=['list-group-i']
+        a[class^=['hre'] 
+    
+    usamos $ para texto final
+        button[class$=['e-link'] 
+        a[class$=['p-item']
+        a[class$=['efch'] 
+    
+    usamos * para texto contenido
+        button[class*=['page'] 
+        a[class*=['list-up-it']
+        a[class*=['refc'] 
+        
+// 61: 3 ejemplos de xpaths en versión relativa y absoluta
+    //[@id="navbarExample"]/ul/li[1]/a
+    /html/body/nav/div[1]/ul/li[1]/a
+    
+    //[@id="carouselExampleIndicators"]/div/div[2]/img
+    /html/body/nav/div[2]/div/div/div[2]/img
+    
+    //[@id="itemc"]
+    /html/body/div[5]/div/div[1]/div/a[2]
+    
+// 64: Ejemplo de un xpath con Contains
+    //div[@id="list-group"]//a[contains(text(),'Laptops')]
+
+// 65: Ejemplo de un xpath con starts
+    //div[@id="list-group"]//a[starts(text(),'Lap')]
+    
+    
+    
+Ejemplo de wrapper
+
+    package com.B.Product.Store.First.Test;
+
+    import java.util.List;
+
+    import org.openqa.selenium.By;
+    import org.openqa.selenium.WebDriver;
+    import org.openqa.selenium.WebElement;
+    import org.openqa.selenium.chrome.ChromeDriver;
+
+    public class WrapperBProductStore {
+
+      private WebDriver driver;
+
+      public WrapperBProductStore(WebDriver driver) {
+        this.driver = driver;
+      }
+
+      public WebDriver chromeDriverConnection() {
+      System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+      driver = new ChromeDriver();
+      return driver;
+      }
+
+      public WebElement findElement(By locator) {
+        return driver.findElement(locator);
+      }
+
+      public List<WebElement> findElements(By locator) {
+        return driver.findElements(locator);
+      }
+
+      public String getText(WebElement element) {
+        return element.getText();
+      }
+
+      public String getText(By locator) {
+        return driver.findElement(locator).getText();
+      }
+
+      public void type(String inputText, By locator) {
+        driver.findElement(locator).sendKeys(inputText);
+      }
+
+      public void click(By locator) {
+        driver.findElement(locator).click();
+      }
+
+      public Boolean isDisplayed(By locator) {
+        try {
+          return driver.findElement(locator).isDisplayed();
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+          return false;
+        }
+      }
+
+      public void visitPage(String url) {
+        driver.get(url);
+      }
+
+
+
+    }	
+
+Ejemplo de SignUp
+
+    package com.B.Product.Store.First.Test;
+
+    import org.openqa.selenium.By;
+    import org.openqa.selenium.WebDriver;
+
+    public class SignUpPopUp extends WrapperBProductStore{
+
+      By SignUpButton = By.xpath("//*[@id=\"signin2\"]");
+      By SignUpHeader = By.xpath("//*[@id=\"signInModalLabel\"]");
+      By ExitButton = By.xpath("//*[@id=\"signInModal\"]/div/div/div[1]/button");
+      By UsernameSignUpBox = By.xpath("//*[@id=\"sign-username\"]");
+      By PasswordSignUpBox = By.xpath("//*[@id=\"sign-password\"]");
+      By ConfirmSignUpButton = By.xpath("//*[@id=\"signInModal\"]/div/div/div[3]/button[2]");
+      By CloseSignUpButton = By.xpath("//*[@id=\"signInModal\"]/div/div/div[3]/button[1]");
+
+
+      public SignUpPopUp(WebDriver driver) {
+        super(driver);
+      }
+
+      public void signUpUser() throws InterruptedException {
+        click(SignUpButton);
+        Thread.sleep(2500);
+        if(isDisplayed(SignUpHeader)){
+          type("tomas102", UsernameSignUpBox);
+          type("testpassword", PasswordSignUpBox);
+          click(ConfirmSignUpButton);
+          System.out.println("Username: tomas102 , password: testpassword correctly signed up");
+        }else {
+          System.out.println("ERROR: Sign Up Page not found");
+
+      }
+
+
+      }
+    }
+
+Ejemplo de Test con Junit
+package com.B.Product.Store.First.Test;
+
+import static org.junit.Assert.*;
+
+import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+public class SignUpTest {
+
+	private WebDriver driver;
+	SignUpPopUp signUpPopUp;
+	
+	@Before
+	public void setUp() throws Exception {
+		signUpPopUp = new SignUpPopUp(driver);
+		driver = signUpPopUp.chromeDriverConnection();
+		driver.get("https://www.demoblaze.com/");
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().window().maximize();
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("disable-popup-blocking");
+		
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	System.out.println("Testing has been finished");
+	}
+
+	@Test
+	public void test() throws InterruptedException {
+		signUpPopUp.signUpUser();
+	}
+
+}
