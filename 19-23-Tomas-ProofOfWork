@@ -1,60 +1,134 @@
-package com.B.Product.Store.First.Test;
+// Section 17: chapters 96-98 CALENDAR SELECTION
 
-import static org.junit.Assert.*;
+	package com.B.Product.Store.First.Test;
 
-import java.util.concurrent.TimeUnit;
+	import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+	import java.util.concurrent.TimeUnit;
 
-public class CalendarSelectionDemo {
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
 
-	private WebDriver driver;
-	private String baseUrl;
-	
-	@Before
-	public void setUp() throws Exception {
-	driver = new ChromeDriver();
-	baseUrl = "https://www.expedia.mx/";
-	driver.manage().window().maximize();
-	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-	}
+	public class CalendarSelectionDemo {
 
-	@After
-	public void tearDown() throws Exception {
-	System.out.println("Date has been selected");			
-	}
+		private WebDriver driver;
+		private String baseUrl;
 
-	@Test
-	public void firstMethod() {
-		driver.get(baseUrl);
-		driver.findElement(By.xpath("//*[@id=\"uitk-tabs-button-container\"]/li[2]/a")).click();
-		driver.findElement(By.xpath("//*[@id=\"d1-btn\"]")).click();
-		WebElement dateToSelect = driver.findElement(By.xpath("//*[@id=\"wizard-flight-tab-roundtrip\"]/div[2]/div[2]/div/div/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/table/tbody/tr[6]/td[2]/button"));
-		dateToSelect.click();
-	}
-	
-	@Test
-	public void secondMethod() {
-		driver.get(baseUrl);
-		driver.findElement(By.xpath("//*[@id=\"uitk-tabs-button-container\"]/li[2]/a")).click();
-		driver.findElement(By.xpath("//*[@id=\"d1-btn\"]")).click();
-		WebElement calendarMonth1 = driver.findElement(By.xpath("//*[@id=\"wizard-flight-tab-roundtrip\"]/div[2]/div[2]/div/div/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/table"));
-		
-		List<WebElement> allValidDates = calendarMonth1.findElements(By.tagName("a"));
-		for (WebElement date : allValidDates) {
-			if (date.getText().equals("31")) {
-				date.click();
-				break;
+		@Before
+		public void setUp() throws Exception {
+		driver = new ChromeDriver();
+		baseUrl = "https://www.expedia.mx/";
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		System.out.println("Date has been selected");			
+		}
+
+		@Test
+		public void firstMethod() {
+			driver.get(baseUrl);
+			driver.findElement(By.xpath("//*[@id=\"uitk-tabs-button-container\"]/li[2]/a")).click();
+			driver.findElement(By.xpath("//*[@id=\"d1-btn\"]")).click();
+			WebElement dateToSelect = driver.findElement(By.xpath("//*[@id=\"wizard-flight-tab-roundtrip\"]/div[2]/div[2]/div/div/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/table/tbody/tr[6]/td[2]/button"));
+			dateToSelect.click();
+		}
+
+		@Test
+		public void secondMethod() {
+			driver.get(baseUrl);
+			driver.findElement(By.xpath("//*[@id=\"uitk-tabs-button-container\"]/li[2]/a")).click();
+			driver.findElement(By.xpath("//*[@id=\"d1-btn\"]")).click();
+			WebElement calendarMonth1 = driver.findElement(By.xpath("//*[@id=\"wizard-flight-tab-roundtrip\"]/div[2]/div[2]/div/div/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/table"));
+
+			List<WebElement> allValidDates = calendarMonth1.findElements(By.tagName("a"));
+			for (WebElement date : allValidDates) {
+				if (date.getText().equals("31")) {
+					date.click();
+					break;
+				}
 			}
 		}
+
+
+
 	}
 	
 	
+// Section 17: chapter 99 and 100 AUTOCOMPLETE - DYNAMIC DROPDOWNS
 
-}
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import java.util.List;
+	import java.util.concurrent.TimeUnit;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+
+	public class DynamicDropdownsDemo {
+
+		private WebDriver driver;
+		private String baseUrl;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			driver.get("https://www.expedia.mx/");
+			Thread.sleep(2000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			String partialText = "Gu";
+			String optionToSelect = "Ciudad de Guatemala";
+
+			WebElement textButton = driver.findElement(By.xpath("//*[@id=\"location-field-destination-menu\"]/div[1]/button"));
+			textButton.click();
+			Thread.sleep(2000);
+
+			WebElement textField = driver.findElement(By.xpath("//*[@id=\"location-field-destination\"]"));
+			textField.sendKeys(partialText);
+			Thread.sleep(2000);
+
+			WebElement ulElement = driver.findElement(By.xpath("//*[@id=\"location-field-destination-menu\"]/div[2]/ul"));
+			String innerHTML = ulElement.getAttribute("innerHTML");
+			Thread.sleep(2000);
+			//System.out.println(innerHTML);
+
+			List<WebElement> liElements = ulElement.findElements(By.tagName("li"));
+			Thread.sleep(2000);
+
+			for (WebElement element : liElements) {
+				if (element.getText().contains(optionToSelect)){
+					System.out.println("Selected "+ element.getText());
+					element.click();
+					break;
+					}
+			}
+
+
+
+		}
+
+	}
+
