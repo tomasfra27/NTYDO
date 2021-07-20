@@ -1,0 +1,60 @@
+package com.B.Product.Store.First.Test;
+
+import static org.junit.Assert.*;
+
+import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class CalendarSelectionDemo {
+
+	private WebDriver driver;
+	private String baseUrl;
+	
+	@Before
+	public void setUp() throws Exception {
+	driver = new ChromeDriver();
+	baseUrl = "https://www.expedia.mx/";
+	driver.manage().window().maximize();
+	driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	System.out.println("Date has been selected");			
+	}
+
+	@Test
+	public void firstMethod() {
+		driver.get(baseUrl);
+		driver.findElement(By.xpath("//*[@id=\"uitk-tabs-button-container\"]/li[2]/a")).click();
+		driver.findElement(By.xpath("//*[@id=\"d1-btn\"]")).click();
+		WebElement dateToSelect = driver.findElement(By.xpath("//*[@id=\"wizard-flight-tab-roundtrip\"]/div[2]/div[2]/div/div/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/table/tbody/tr[6]/td[2]/button"));
+		dateToSelect.click();
+	}
+	
+	@Test
+	public void secondMethod() {
+		driver.get(baseUrl);
+		driver.findElement(By.xpath("//*[@id=\"uitk-tabs-button-container\"]/li[2]/a")).click();
+		driver.findElement(By.xpath("//*[@id=\"d1-btn\"]")).click();
+		WebElement calendarMonth1 = driver.findElement(By.xpath("//*[@id=\"wizard-flight-tab-roundtrip\"]/div[2]/div[2]/div/div/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/table"));
+		
+		List<WebElement> allValidDates = calendarMonth1.findElements(By.tagName("a"));
+		for (WebElement date : allValidDates) {
+			if (date.getText().equals("31")) {
+				date.click();
+				break;
+			}
+		}
+	}
+	
+	
+
+}
