@@ -132,3 +132,68 @@
 
 	}
 
+
+// Section 17: Chapter 101; how to take screenshots
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.apache.commons.io.FileUtils;
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.OutputType;
+	import org.openqa.selenium.TakesScreenshot;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+	import java.io.File;
+
+
+	public class ScreenshotDemo {
+
+		private WebDriver driver;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			driver.get("https://www.expedia.mx/");
+			Thread.sleep(2000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+			String fileName = getRandomString(8) + ".png";
+			String directory = System.getProperty("user.dir") + "/Screenshots/";
+			File sourceFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+
+			FileUtils.copyFile(sourceFile, new File (directory + fileName));
+			driver.quit();
+
+
+
+		}
+
+		@Test
+		public void test() {
+			driver.findElement(By.xpath("//input[@id='query']")).click();
+
+
+		}
+
+		public static String getRandomString(int length) {
+			StringBuilder sb = new StringBuilder();
+			String characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+			for (int i = 0; i < length; i++) {
+				int index = (int)(Math.random() * characters.length());
+				sb.append(characters.charAt(index));
+			}
+			return sb.toString();
+		}
+
+	}
