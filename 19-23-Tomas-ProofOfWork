@@ -197,3 +197,66 @@
 		}
 
 	}
+	
+
+// Section 18: How to run Javascript on Selenium Java (Example for scrollIntoView)
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.JavascriptExecutor;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+
+	public class ScrollDownJSDemo {
+
+		private WebDriver driver;
+		private JavascriptExecutor js;
+
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			js = (JavascriptExecutor) driver;
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			//Open the webPage
+			js.executeScript("window.location = 'https://courses.letskodeit.com/practice'");
+			Thread.sleep(2000);
+
+			//Scroll Down 
+			js.executeScript("window.scrollBy(0,1800);");
+			Thread.sleep(2000);
+
+			// Scroll Up
+			js.executeScript("window.scrollBy(0,-1800);");
+			Thread.sleep(2000);
+
+			//Scroll Element into view
+			WebElement element = driver.findElement(By.id("mousehover"));
+			js.executeScript("argument[0].scrollIntoView(true);" , element);
+			Thread.sleep(2000);
+			js.executeScript("window.scrollBy(0,-100;");
+
+
+		}
+
+	}
+	
+	
+
