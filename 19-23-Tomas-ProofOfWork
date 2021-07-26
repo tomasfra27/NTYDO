@@ -259,4 +259,464 @@
 	}
 	
 	
+//Section 19: chapters 107 and 108
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import java.util.Set;
+	import java.util.concurrent.TimeUnit;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.JavascriptExecutor;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+
+	public class SwitchToDemo {
+
+		private WebDriver driver;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			driver.get("https://courses.letskodeit.com/practice");
+
+			//WebElement logInButton2 = driver.findElement(By.linkText("Sign In"));
+			//logInButton2.click();
+
+			String parentHandle = driver.getWindowHandle();
+			System.out.println("Parent handle is "+ parentHandle);
+
+			WebElement openWindow = driver.findElement(By.id("openwindow"));
+			openWindow.click();
+
+			Set<String> handles = driver.getWindowHandles();
+
+			for (String handle: handles) {
+				System.out.println(handle);
+				if (!handle.equals(parentHandle)) {
+					driver.switchTo().window(handle);
+					Thread.sleep(2500);
+					WebElement logInButton2 = driver.findElement(By.xpath("//*[@id=\"zen_cs_desc_with_promo_dynamic\"]/div/div/div[4]/button"));
+					logInButton2.click();
+
+
+				}
+
+			}
+
+
+		}
+
+	}
+	
+	
+// Section 19: 10 and 110 (IFrame change example)
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+
+	public class IFramesDemo {
+
+		private WebDriver driver;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+
+
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			driver.get("https://courses.letskodeit.com/practice");
+			Thread.sleep(5000);
+
+			driver.switchTo().frame("courses-iframe");
+			Thread.sleep(5000);
+
+			WebElement searchBoxIFrame = driver.findElement(By.xpath("//*[@id=\"search\"]"));
+			searchBoxIFrame.sendKeys("Python");
+			Thread.sleep(5000);
+
+			driver.switchTo().defaultContent();
+			Thread.sleep(5000);
+
+		}
+
+	}
+	
+	
+Section 19: Chapter 111 (Handling Javascript pop-ups)
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.Alert;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.chrome.ChromeDriver;
+
+	public class JavascriptPopUpHandleDemo {
+
+		private WebDriver driver;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			driver.get("https://courses.letskodeit.com/practice");
+			Thread.sleep(5000);
+
+			driver.findElement(By.id("name")).sendKeys("Tomas");
+			driver.findElement(By.id("alertbtn")).click();
+			Thread.sleep(2000);
+			Alert alert = driver.switchTo().alert();
+			alert.accept();
+
+
+		}
+
+	}
+	
+	
+	
+Section 20: Chapter 112 (Mouse Hover)
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.JavascriptExecutor;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+	import org.openqa.selenium.interactions.Actions;
+
+	public class MouseHoverDemo {
+
+		private WebDriver driver;
+		private JavascriptExecutor js;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			js = (JavascriptExecutor) driver;
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			js.executeScript("window.location = 'https://courses.letskodeit.com/practice'");
+			Thread.sleep(2000);
+
+			js.executeScript("window.scrollBy(0,600);");
+			Thread.sleep(2000);
+
+			WebElement mainElement = driver.findElement(By.id("mousehover"));
+			Actions action = new Actions (driver);
+			action.moveToElement(mainElement).perform();
+			Thread.sleep(2000);
+
+			WebElement subElement = driver.findElement(By.xpath("//div[@class='mouse-hover-content']//a[@text()='Top']"));
+			action.moveToElement(subElement).click();
+
+
+
+
+		}
+
+	}
+	
+	
+Section 20: Drag and Drop example
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.JavascriptExecutor;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+	import org.openqa.selenium.interactions.Actions;
+
+	public class DragAndDropDemo {
+
+		private WebDriver driver;
+		private JavascriptExecutor js;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			js = (JavascriptExecutor) driver;
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() {
+			driver.get("https://jqueryui.com/droppable/");
+			Thread.sleep(2000);
+
+			WebElement fromElement = driver.findElement(By.id("draggable"));
+			WebElement toElement = driver.findElement(By.id("droppable"));
+
+			Actions action = new Actions(driver);
+			action.clickAndHold(fromElement).moveToElement(toElement).release().build().perform();
+		}
+
+	}
+	
+	
+Section 20: Working with sliders
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.JavascriptExecutor;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+	import org.openqa.selenium.interactions.Actions;
+
+	public class SlidersDemo {
+
+		private WebDriver driver;
+		private JavascriptExecutor js;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			js = (JavascriptExecutor) driver;
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			driver.get("https://jqueryui.com/slider/");
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+
+			WebElement element = driver.findElement(By.xpath("//div[@id='slider']/span"));
+			Actions action = new Actions(driver);
+			action.dragAndDropBy(element, 100, 0).perform();
+
+		}
+
+	}
+
+// Chapter 21: Send Keys with keyboard
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.JavascriptExecutor;
+	import org.openqa.selenium.Keys;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.chrome.ChromeDriver;
+
+	public class KeysOnSeleniumDemo {
+
+		private WebDriver driver;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			driver.get("https://courses.letskodeit.com/practice");	
+			driver.findElement(By.xpath("//a[contains(@href,'sign_in')]")).click();
+			driver.findElement(By.id("user_email")).sendKeys("tomas@gmail.com");
+			Thread.sleep(2000);
+			driver.findElement(By.id("user_email")).sendKeys(Keys.TAB);
+			driver.findElement(By.id("user_password")).sendKeys("prueba");
+			Thread.sleep(2000);
+			driver.findElement(By.name("commit")).sendKeys(Keys.ENTER);
+		}
+
+	}
+
+
+Chapter 21: Commands with keyboard
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.JavascriptExecutor;
+	import org.openqa.selenium.Keys;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.chrome.ChromeDriver;
+
+	public class KeysOnSeleniumDemo {
+
+		private WebDriver driver;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			driver.get("https://courses.letskodeit.com/practice");	
+			driver.findElement(By.id("openwindow")).sendKeys(Keys.CONTROL + "a");
+			Thread.sleep(2000);
+			driver.findElement(By.id("openwindow")).sendKeys(Keys.chord(Keys.CONTROL, "a"));
+			Thread.sleep(2000);
+			String selectAll = Keys.chord(Keys.CONTROL, "a");
+			driver.findElement(By.id("openwindow")).sendKeys(selectAll);
+			Thread.sleep(4000);
+		}
+
+	}
+
+
+// Chapter 21: Keypress using action class
+
+	package com.B.Product.Store.First.Test;
+
+	import static org.junit.Assert.*;
+
+	import org.junit.After;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.openqa.selenium.By;
+	import org.openqa.selenium.JavascriptExecutor;
+	import org.openqa.selenium.Keys;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.chrome.ChromeDriver;
+	import org.openqa.selenium.interactions.Actions;
+
+	public class KeysOnSeleniumDemo {
+
+		private WebDriver driver;
+
+		@Before
+		public void setUp() throws Exception {
+			System.setProperty("webdriver.chrome.driver", "ChromeDriver/chromedriver_linux64/chromedriver");
+			driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			Thread.sleep(3000);
+		}
+
+		@After
+		public void tearDown() throws Exception {
+		}
+
+		@Test
+		public void test() throws InterruptedException {
+			driver.get("https://courses.letskodeit.com/practice");
+			Thread.sleep(3000);
+
+			Actions action = new Actions(driver);
+			action.keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).perform();
+		}
+
+	}
+
+
+
 
