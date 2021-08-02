@@ -1,0 +1,270 @@
+// TestNG Asserts
+
+    package demo2;
+
+    import org.testng.Assert;
+    import org.testng.annotations.Test;
+    import appcode.SomeClassToTest;
+
+    public class TestNG_Asserts {
+
+      @Test
+      public void testString() {
+        System.out.println("\nRunning Test > testString");
+        String expectedString = "Hello World";
+        SomeClassToTest obj = new SomeClassToTest();
+        String result = obj.addStrings("Hello", "World");
+        Assert.assertEquals(result, expectedString);
+      }
+
+    }
+
+  
+// Soft asserts
+ 
+   package demo2;
+
+
+  import org.testng.asserts.SoftAssert;
+  import org.testng.annotations.Test;
+  import appcode.SomeClassToTest;
+
+  public class TestNG_SoftAsserts {
+
+    @Test
+    public void testSum() {
+      SoftAssert sa = new SoftAssert();
+      System.out.println("\nRunning Test > testSum");
+
+      SomeClassToTest obj = new SomeClassToTest();
+      int result = obj.sumNumbers(1, 2);
+      sa.assertEquals(result, 2);
+      System.out.println("\nLine after assert 1");
+
+      sa.assertEquals(result, 3);
+      System.out.println("\nLine after assert 2");
+      sa.assertAll();
+    }
+
+
+// Dependent Tests
+
+    package demo2;
+
+    import org.testng.Assert;
+    import org.testng.annotations.AfterClass;
+    import org.testng.annotations.BeforeClass;
+    import org.testng.annotations.Test;
+    import appcode.SomeClassToTest;
+
+    public class TestNG_DependentTests {
+
+        SomeClassToTest obj;
+
+        @BeforeClass
+        public void setUp() {
+          obj = new SomeClassToTest();
+          System.out.println("before class");
+        }
+
+        @AfterClass
+        public void cleanUp() {
+          System.out.println("after class");
+        }
+
+        @Test(dependsOnMethods={ "testMethod2" }, alwaysRun=true)
+        public void testMethod1() {
+          System.out.println("testMethod1");
+        }
+
+        @Test
+        public void testMethod2() {
+          System.out.println("testMethod2");
+          int result = obj.sumNumbers(1, 2);
+          Assert.assertEquals(result, 2);
+        }
+
+        @Test(dependsOnMethods={ "testMethod1" })
+        public void testMethod3() {
+          System.out.println("testMethod3");
+        }
+
+      }
+      
+      
+// Timeouts and disables
+
+    package testclasses;
+
+    import org.testng.annotations.AfterClass;
+    import org.testng.annotations.BeforeClass;
+    import org.testng.annotations.Test;
+
+    public class TestNG_EnableTimeout {
+
+      @BeforeClass
+      public void setUp() {
+        System.out.println("before class");
+      }
+
+      @AfterClass
+      public void cleanUp() {
+        System.out.println("after class");
+      }
+
+      @Test(enabled=false)
+      public void testMethod1() {
+        System.out.println("testMethod1");
+      }
+
+      @Test(timeOut=300)
+      public void testMethod2() throws InterruptedException {
+        System.out.println("testMethod2");
+        Thread.sleep(200);
+      }
+      
+    }
+    
+    
+// Data Providers
+
+    package demo2;
+
+    import org.testng.annotations.DataProvider;
+    import org.testng.annotations.Test;
+
+    public class TestNG_DataProviders {
+
+      @DataProvider(name="inputs")
+      public Object[][] getData() {
+        return new Object[][] {
+          {"Bmw", "M3"},
+          {"Audi", "A6"},
+          {"Mercdes", "C300"}
+        };
+      }
+
+      @Test(dataProvider="inputs")
+      public void testMethod1(String input1, String input2) {
+        System.out.println("Input 1: " + input1);
+        System.out.println("Input 2: " + input2);
+      }
+    }
+    
+    
+// Listeners
+
+    package demo3;
+
+    import org.testng.IInvokedMethod;
+    import org.testng.IInvokedMethodListener;
+    import org.testng.ITestResult;
+
+    public class CustomListener1 implements IInvokedMethodListener {
+
+      @Override
+      public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
+        System.out.println("beforeInvocation: " + testResult.getTestClass().getName() + 
+            " > " + method.getTestMethod().getMethodName());
+      }
+
+      @Override
+      public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
+        System.out.println("afterInvocation: " + testResult.getTestClass().getName() + 
+            " > " + method.getTestMethod().getMethodName());
+      }
+    }
+    
+    
+// Extent reports
+
+package demo4;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+
+public class SeleniumLoginTest {
+	
+	private WebDriver driver;
+	private String baseUrl;
+	ExtentReports report;
+	ExtentTest test;
+
+	@BeforeClass
+	public void beforeClass() {
+		baseUrl = "http://www.letskodeit.com/";
+		report = new ExtentReports("//C//cernalu//Desktop//logintest.html");
+		test = report.startTest("Verify Welcome Text");
+		driver = new FirefoxDriver();
+		test.log(LogStatus.INFO, "Browser Started...");
+
+		// Maximize the browser's window
+		driver.manage().window().maximize();
+		test.log(LogStatus.INFO, "Browser Maximized");
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.get(baseUrl);
+		test.log(LogStatus.INFO, "Web application opened");
+	}
+	
+	@Test
+	public void test1_validLoginTest() throws Exception {
+		WebElement signupLink = driver.findElement(By.id("comp-iiqg1vggactionTitle"));
+		signupLink.click();
+		test.log(LogStatus.INFO, "Clicked on signup link");
+		
+		
+    WebElement loginLink = driver.findElement(By.id("signUpDialogswitchDialogLink"));
+		loginLink.click();
+		test.log(LogStatus.INFO, "Clicked on login link");
+		
+		
+    WebElement emailField = driver.findElement(By.xpath("//div[@id='memberLoginDialogemail']//input"));
+		emailField.sendKeys("tomas.fragoso@hotmail.com");
+		test.log(LogStatus.INFO, "Enter email");
+		
+		
+    WebElement passwordField = driver.findElement(By.xpath("//div[@id='memberLoginDialogpassword']//input"));
+		passwordField.sendKeys("tomas_27");
+		test.log(LogStatus.INFO, "Enter password");
+		
+		
+    WebElement goButton = driver.findElement(By.id("memberLoginDialogsubmitButton"));
+		goButton.click();
+		test.log(LogStatus.INFO, "Clicked Go button");
+		
+		Thread.sleep(3000);
+		
+		WebElement welcomeText = null;
+		
+		try {
+			welcomeText = driver.findElement(By.xpath("//div[text()='Hello test@email.com']"));
+		}
+		catch (NoSuchElementException e) {
+			System.out.println(e.getMessage());
+		}
+		Assert.assertTrue(welcomeText != null);
+		test.log(LogStatus.PASS, "Verified Welcome Text");
+	}
+	
+	@AfterClass
+	public void afterClass() {
+		driver.quit();
+		report.endTest(test);
+   
+   }
+   
+   
+// 
